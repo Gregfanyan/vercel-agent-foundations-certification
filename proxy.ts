@@ -14,6 +14,10 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname.startsWith("/api/")) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const url = request.nextUrl.clone();
   url.pathname = "/admin/login";
   url.search = "";
@@ -21,5 +25,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };

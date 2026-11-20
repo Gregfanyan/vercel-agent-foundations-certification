@@ -17,7 +17,8 @@ export async function loginAction(formData: FormData): Promise<void> {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     maxAge: COOKIE_MAX_AGE,
-    path: "/admin",
+    // "/" so the cookie also reaches the admin agent API under /api/admin.
+    path: "/",
   });
   redirect("/admin");
 }
@@ -25,5 +26,8 @@ export async function loginAction(formData: FormData): Promise<void> {
 export async function logoutAction(): Promise<void> {
   const store = await cookies();
   store.delete(ADMIN_COOKIE_NAME);
+  // Clear the old /admin-scoped cookie too for users who logged in before the
+  // chat API moved outside that path.
+  store.set(ADMIN_COOKIE_NAME, "", { path: "/admin", maxAge: 0 });
   redirect("/admin/login");
 }

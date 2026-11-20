@@ -4,7 +4,7 @@ import { formatPrice } from "@/lib/format"
 import type { Product } from "@/lib/types"
 
 interface ProductCardProps {
-  product: Product
+  product: Pick<Product, "id" | "name" | "price" | "currency" | "images">
   priority?: boolean
 }
 
